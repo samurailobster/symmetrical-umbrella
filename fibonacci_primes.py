@@ -1,39 +1,40 @@
-#!/usr/bin/env python 
+#!/usr/bin/env python3 
 
 from functools import lru_cache
 import math
+import random
+import time
 
-@lru_cache(maxsize = None)
+@lru_cache(maxsize = 128)
 def fibonacci(n):
+    if type(n) != int:
+        raise TypeError("n must be a positive integer.")
+    if n < 1:
+        raise ValueError("n must be a positive integer.")
+    
     if n == 1:
         return 1
-    elif n == 2:
+    if n == 2:
         return 1
     elif n > 2:
         return fibonacci(n-1) + fibonacci(n-2)
 
+@lru_cache(maxsize = 10000)
 def is_prime_v3(n):
-    # Returns True if num is a prime number.
-    s = n - 1
-    t = 0
-    while s % 2 == 0:
-        # keep halving s while it is even (and use t
-        # to count how many times we halve s)
-        s = s // 2
-        t += 1
+    if n == 1:
+        return
+    if n == 2:
+        print(str(n) + " is a Prime Fibonacci number.")
+    elif n > 2 and n % 2 == 0:
+        return
+    max_divisor = math.floor(math.sqrt(n))
+    for d in range(3, 1 + max_divisor, 2):
+        if n % d == 0:
+            return
+    print(str(n) + " is a Prime Fibonacci number.")
 
-    for trials in range(10): # try to falsify num's primality 5 times
-        a = random.randrange(2, n - 1)
-        v = pow(a, s, n)
-        if v != 1: # this test does not apply if v is 1.
-            i = 0
-            while v != (n - 1):
-                if i == t - 1:
-                    return False
-                else:
-                    i = i + 1
-                    v = (v ** 2) % n
-                    print(str(n + " is a Prime Fibonacci number."))
-
-for n in range(1,25):
+t0 = time.time()
+for n in range(1,90):
     is_prime_v3(fibonacci(n))
+t1 = time.time()
+print("Time required: ", t1 - t0)
