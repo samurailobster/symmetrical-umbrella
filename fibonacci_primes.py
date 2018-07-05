@@ -1,36 +1,26 @@
-#! /usr/bin/env python3
+#!/usr/bin/env python 
 
-# Calculates Fibonacci numbers and checks primality using basic methods
-# Works as of 4/11/2018
-import cProfile
-import os
+from functools import lru_cache
 
+@lru_cache(maxsize = 1000)
 def fibonacci(n):
-    a, b = 0, 1
-    while a < n:
-        a, b = b, a+b
-        if a > n:
-            break
-        else:
-            is_prime(a)
+    if n == 1:
+        return 1
+    elif n == 2:
+        return 1
+    elif n > 2:
+            return fibonacci(n-1) + fibonacci(n-2)
 
+def is_prime_v1(n):
+    if n == 1:
+        return False
+    for d in range(2, n):
+        if n % d == 0:
+            return False
+    return True
 
-def is_prime(fibo_number):
-    if fibo_number == 0:
-        # NOT prime
-        return None
+for f in range(1, 101):
+    if is_prime_v1(fibonacci(f)):
+        print(str(f) + " is a Prime Fibonacci number.")
     else:
-        if fibo_number == 1:
-            #NOT prime
-            return None
-        else:
-            for i in range(2,fibo_number):
-                if fibo_number % i == 0:
-                    # NOT PRIME
-                    return None
-            # PRIME
-            filename = os.path.join(os.getcwd(), 'fibonacci.txt')                        
-            with open(filename, 'a') as f:
-                f.write(str(f'{fibo_number} is a Fibonacci prime number!\n'))
-
-fibonacci(10000000000)
+        print(str(f) + " is not Prime Fibonacci number.")
